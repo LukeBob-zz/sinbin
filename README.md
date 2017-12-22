@@ -2,6 +2,14 @@
 pastebin email dump scraper.
 
 
+# Setup
+
+     run: python3 setup.py
+     then: put your pastebin api_dev_key in the sinbin.py file and run.
+     run: sinbin.py --help
+     
+     
+
 # Example
 
     C:\paste-python>SinBin.py --help
