@@ -193,7 +193,7 @@ def query_sqlite3():
 
         
 def dump_email(paste_key):
-    a=1
+    a=0
     (db, cursor) = db_connect()
     print("\n[{0}] Scraping pastebin for email:password dumps...\n".format(g))
     for key in paste_key:
