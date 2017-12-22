@@ -55,7 +55,7 @@ usage: {0} --make_table                        Create database tables.
 '''.format(prog))
 
 
-parser = argparse.ArgumentParser(description="Pastebin tool", usage=__example__, epilog=Fore.GREEN+"MOTTO: "+Style.RESET_ALL+"WYO OR GTFO!")
+parser = argparse.ArgumentParser(description="Pastebin tool", usage=__example__)
 parser.add_argument("-d", "--dump", action="store_true", help="Scrape pastebin for Email:password dumps.")
 parser.add_argument("-s", "--stream", action="store_true", help="Stream trending pastebin content.")
 parser.add_argument("-t", "--time", help="intervals to print data in seconds default: 0.3")
