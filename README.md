@@ -63,9 +63,7 @@ A tool for collecting dumped usernames and passwords from pastebin and storing t
        -p, --purge           Drop(Delete) duplicate entries in database
        -c, --count           Count entries in database
        -b, --backup          Make a backup of database.
- 
 
-       MOTTO: WYO OR GTFO!
 
     C:\paste-python>
 
