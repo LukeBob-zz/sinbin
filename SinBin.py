@@ -7,7 +7,8 @@ import sqlite3
 import os
 from colorama import init, Fore, Style
 
-api_dev_key = ""                # <==  Pastebin api_dev_key
+api_dev_key = ""                # Pastebin api_dev_key
+
 
 init()
 
@@ -51,6 +52,7 @@ usage: {0} --drop                              Drop all entries from database.
 usage: {0} --purge                             Drop all duplicate entries from databse.
 usage: {0} --count                             Count all entries in database.
 usage: {0} --backup                            Make a backup of database.
+usage: {0} --make_table                        Create database tables.
 '''.format(prog))
 
 
@@ -195,7 +197,7 @@ def query_sqlite3():
 
         else:
             parser.print_help()
-            
+
     except sqlite3.OperationalError:
         print("[{0}] Error: You must run --make_table to make the database and tables!".format(b))
 
