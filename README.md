@@ -66,7 +66,7 @@ Pastebin Recon tool.
 
 # Contributors
 
-**Luke/Bob**
+**LukeBob**
 
 
 # License
