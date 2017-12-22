@@ -1,5 +1,5 @@
 # SINBIN
-pastebin email dump scraper.
+Pastebin Recon tool.
 
 
 # Setup
