@@ -3,7 +3,7 @@
 
 
 # SINBIN
-Tool for collecting dumped usernames and passwords from pastebin and store them in sqlite3.
+A tool for collecting dumped usernames and passwords from pastebin and store them in sqlite3.
 
 
 # Setup
