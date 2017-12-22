@@ -63,3 +63,12 @@ Pastebin Recon tool.
        MOTTO: WYO OR GTFO!
 
     C:\paste-python>
+
+# Contributors
+
+**Luke/Bob**
+
+
+# License
+
+**Copyright (c) 2017 LukeBob (MIT)**
