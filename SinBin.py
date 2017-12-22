@@ -30,7 +30,6 @@ sb = (Fore.GREEN+"""
 """+Style.RESET_ALL)
 
 banner = (r"""
-
                 ┈╭━━━━━━━━━━━╮┈
                 ┈┃╭━━━╮┊╭━━━╮┃┈
                 ╭┫┃┈{3}┈┃┊┃┈{3}┈┃┣╮
@@ -171,13 +170,14 @@ def query_sqlite3():
         parser.print_help()
 
 def dump_email(paste_key):
+    (db, cursor) = db_connect()
     print("\n[{0}] Scraping pastebin for email:password dumps...\n".format(g))
     for key in paste_key:
         r = requests.get("https://pastebin.com/raw/{0}".format(key))
         data = r.text
 
         for line in data.split('\n'):
-            if re.match("[\w.]+@[\w.]+:+", line):
+            if re.match("[\w.]+@[\w.]+", line):
                 email_list.append(line)
     print("[{0}] Inserting [{1}] Username:Password combinations into Database...".format(g, str(len(email_list))))
 
@@ -185,7 +185,6 @@ def dump_email(paste_key):
     for email in email_list:
         try:
             username, password = email.split(":")
-            (db, cursor) = db_connect()
             try:
                cursor.execute('''INSERT INTO victims(name, password) VALUES(?,?)''', (username, password))
             except sqlite3.OperationalError:
@@ -195,7 +194,16 @@ def dump_email(paste_key):
             db.commit()
 
         except ValueError:
-            pass
+            try:
+                username, password = email.split("|")
+                try:
+                   cursor.execute('''INSERT INTO victims(name, password) VALUES(?,?)''', (username, password))
+                except sqlite3.OperationalError:
+                   cursor.execute('''
+                       CREATE TABLE victims(name TEXT, password TEXT)
+                   ''')
+            except:
+                pass
 
     print("\n[{0}] Succesfully Inserted [{1}] Email:Password combinations into Database.".format(g, str(len(email_list))))
 
@@ -256,3 +264,4 @@ def main():
 
 if __name__ == '__main__':
     main()
+
