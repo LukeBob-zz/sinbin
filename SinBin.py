@@ -9,6 +9,7 @@ from colorama import init, Fore, Style
 
 api_dev_key = ""                # Pastebin api_dev_key
 
+
 init()
 
 __author__ = Fore.CYAN+"Author:"+Style.RESET_ALL+"LukeBob"
@@ -54,6 +55,7 @@ usage: {0} --backup                            Make a backup of database.
 usage: {0} --make_table                        Create database tables.
 '''.format(prog))
 
+
 parser = argparse.ArgumentParser(description="Pastebin tool", usage=__example__, epilog=Fore.GREEN+"MOTTO: "+Style.RESET_ALL+"WYO OR GTFO!")
 parser.add_argument("-d", "--dump", action="store_true", help="Scrape pastebin for Email:password dumps.")
 parser.add_argument("-s", "--stream", action="store_true", help="Stream trending pastebin content.")
@@ -68,7 +70,9 @@ parser.add_argument("-b", "--backup", action="store_true", help="Make a backup o
 parser.add_argument("-m", "--make_table", action="store_true", help="Create new tables.")
 args = parser.parse_args()
 
+
 email_list = []
+
 
 def db_connect():
     try:
@@ -100,6 +104,9 @@ def make_database():
         print("\n[{0}] Database and tables Created!".format(g))
     except:
         raise
+
+
+
 
 def backup_database():
     time_now = return_time()
@@ -154,7 +161,9 @@ def purge_data():
     except sqlite3.OperationalError:
         print("[{0}] Error: You must run --make_table to make the database and tables!".format(b))
 
-        
+
+
+
 def drop_all():
     (db, cursor) = db_connect()
     try:
@@ -165,7 +174,8 @@ def drop_all():
     except sqlite3.OperationalError:
         print("[{0}] Error: You must run --make_table to make the database and tables!".format(b))
 
-        
+
+
 def query_sqlite3():
     (db, cursor) = db_connect()
     try:
@@ -191,7 +201,6 @@ def query_sqlite3():
     except sqlite3.OperationalError:
         print("[{0}] Error: You must run --make_table to make the database and tables!".format(b))
 
-        
 def dump_email(paste_key):
     a=0
     (db, cursor) = db_connect()
@@ -233,7 +242,7 @@ def dump_email(paste_key):
 
     print("\n[{0}] Succesfully Inserted [{1}] Email:Password combinations into Database.".format(g, str(a)))
 
-    
+
 def stream(paste_key, tyme=0.3):
         print("\n[{0}] Scraping pastebin...\n".format(g))
         for key in paste_key:
@@ -244,7 +253,6 @@ def stream(paste_key, tyme=0.3):
                 time.sleep(tyme)
                 print(line)
 
-                
 def main():
     api = PasteBinApi(api_dev_key)
     trends = api.trends()
@@ -252,6 +260,7 @@ def main():
     try:
         if args.make_table:
             make_database()
+
         elif args.backup:
             backup_database()
 
@@ -275,13 +284,22 @@ def main():
                 exit(0)
 
         elif args.dump:
-            dump_email(paste_key)
+            if "Bad API request" in trends:
+                print("[{0}] Error: {1}".format(b, trends))
+            else:
+                dump_email(paste_key)
 
         elif args.stream and args.time:
-            stream(paste_key, tyme=(float(args.time)))
+            if "Bad API request" in trends:
+                print("[{0}] Error: {1}".format(b, trends))
+            else:
+                stream(paste_key, tyme=(float(args.time)))
 
         elif args.stream and not args.time:
-            stream(paste_key)
+            if "Bad API request" in trends:
+                print("[{0}] Error: {1}".format(b, trends))
+            else:
+                stream(paste_key)
 
         else:
             parser.print_help()
