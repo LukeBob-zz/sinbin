@@ -1,4 +1,4 @@
-# sinbin
+# SINBIN
 pastebin email dump scraper.
 
 
