@@ -176,7 +176,7 @@ def query_sqlite3():
             vic = cursor.fetchall()
             if vic:
                 for row in vic:
-                    print("\n[{2}] Email   : {0}\n[*] Password: {1}\n".format(args.email, row[0], g))
+                    print("\n[{2}] Email   : {0}\n[{2}] Password: {1}\n".format(args.email, row[0], g))
             else:
                 print("\n[{0}] No Entries found for ({1})\n".format(b ,args.email))
 
