@@ -9,7 +9,6 @@ from colorama import init, Fore, Style
 
 api_dev_key = ""                # Pastebin api_dev_key
 
-
 init()
 
 __author__ = Fore.CYAN+"Author:"+Style.RESET_ALL+"LukeBob"
@@ -105,9 +104,6 @@ def make_database():
     except:
         raise
 
-
-
-
 def backup_database():
     time_now = return_time()
     try:
@@ -161,9 +157,6 @@ def purge_data():
     except sqlite3.OperationalError:
         print("[{0}] Error: You must run --make_table to make the database and tables!".format(b))
 
-
-
-
 def drop_all():
     (db, cursor) = db_connect()
     try:
@@ -173,8 +166,6 @@ def drop_all():
 
     except sqlite3.OperationalError:
         print("[{0}] Error: You must run --make_table to make the database and tables!".format(b))
-
-
 
 def query_sqlite3():
     (db, cursor) = db_connect()
