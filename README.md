@@ -1,3 +1,7 @@
+
+[![DUB](https://img.shields.io/badge/language-python3.5-brightgreen.svg)]()  [![DUB](https://img.shields.io/badge/platform-win--64%20%7C%20linux--64%20-lightgrey.svg)]()  [![DUB](https://img.shields.io/dub/l/vibe-d.svg)]() [![DUB](https://img.shields.io/badge/database-sqlite3-orange.svg)]()
+
+
 # SINBIN
 Pastebin Recon tool.
 
