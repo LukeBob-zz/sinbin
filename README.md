@@ -46,6 +46,7 @@ Pastebin Recon tool.
      usage: SinBin.py --purge                             Drop all duplicate entries from databse.
      usage: SinBin.py --count                             Count all entries in database.
      usage: SinBin.py --backup                            Make a backup of database.
+     usage: SinBin.py --make_table                        Create database tables.
 
      Pastebin tool
 
