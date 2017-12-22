@@ -101,8 +101,9 @@ def make_database():
         ''')
         db.commit()
         print("\n[{0}] Database and tables Created!".format(g))
-    except:
-        raise
+    except sqlite3.OperationalError as e:
+        print("[{0}] Error: {1}".format(b, e))
+        exit(0)
 
 def backup_database():
     time_now = return_time()
