@@ -4,9 +4,9 @@ Pastebin Recon tool.
 
 # Setup
 
-     run: python3 setup.py
-     then: put your pastebin api_dev_key, in the sinbin.py file.
-     run: sinbin.py --help
+     python3 setup.py
+     put your pastebin api_dev_key, in the sinbin.py file.
+     run python3 sinbin.py --help
      
      
 
