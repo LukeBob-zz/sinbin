@@ -67,7 +67,6 @@ parser.add_argument("-x", "--drop", action="store_true", help="Drop(Delete) all 
 parser.add_argument("-p", "--purge", action="store_true", help="Drop(Delete) duplicate entries in database")
 parser.add_argument("-c", "--count", action="store_true", help="Count entries in database")
 parser.add_argument("-b", "--backup", action="store_true", help="Make a backup of database.")
-parser.add_argument("-i", "--init", help="Initialize pastebin api key, (\'One time occasion!\') api_key saves to database for further use.")
 
 args = parser.parse_args()
 
