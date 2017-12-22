@@ -7,8 +7,7 @@ import sqlite3
 import os
 from colorama import init, Fore, Style
 
-api_dev_key = ""                # Pastebin api_dev_key
-
+api_dev_key = ""                # <==  Pastebin api_dev_key
 
 init()
 
@@ -66,7 +65,7 @@ parser.add_argument("-x", "--drop", action="store_true", help="Drop(Delete) all 
 parser.add_argument("-p", "--purge", action="store_true", help="Drop(Delete) duplicate entries in database")
 parser.add_argument("-c", "--count", action="store_true", help="Count entries in database")
 parser.add_argument("-b", "--backup", action="store_true", help="Make a backup of database.")
-
+parser.add_argument("-m", "--make_table", action="store_true", help="Create new tables.")
 args = parser.parse_args()
 
 
@@ -93,6 +92,20 @@ def return_time():
     time_now = time.strftime("%Y-%m-%d--%H-%M-%S", time.gmtime())
     return(time_now)
 
+def make_database():
+    (db, cursor) = db_connect()
+    try:
+        cursor.execute('''
+            CREATE TABLE victims(name TEXT, password TEXT)
+        ''')
+        db.commit()
+        print("\n[{0}] Database and tables Created!".format(g))
+    except:
+        raise
+
+
+
+
 def backup_database():
     time_now = return_time()
     try:
@@ -118,58 +131,76 @@ def backup_database():
 
 def count_entries():
     (db, cursor) = db_connect()
-    cursor.execute('''SELECT * FROM victims''')
-    all_rows = cursor.fetchall()
-    if all_rows:
-        print("[{0}] Found [{1}] entries in database.".format(g, str(len(all_rows))))
-    else:
-        print("[{0}] No entries in database!".format(b))
+    try:
+        cursor.execute('''SELECT * FROM victims''')
+        all_rows = cursor.fetchall()
+        if all_rows:
+            print("[{0}] Found [{1}] entries in database.".format(g, str(len(all_rows))))
+        else:
+            print("[{0}] No entries in database!".format(b))
+    except sqlite3.OperationalError:
+        print("[{0}] Error: You must run --make_table to make the database and tables!".format(b))
 
 
 def purge_data():
     (db, cursor) = db_connect()
-    cursor.execute('''SELECT * FROM victims WHERE rowid NOT IN (SELECT min(rowid) FROM victims GROUP BY name, password)''')
-    vic = cursor.fetchall()
-    if vic:
-        print("\n[{0}] Found [{1}] duplicate entries in databse.".format(g, str(len(vic))))
-        cursor.execute('''DELETE FROM victims WHERE rowid NOT IN (SELECT min(rowid) FROM victims GROUP BY name, password)''')
-        db.commit()
-        print("\n[{0}] Removed [{1}] duplicate entries from database".format(g, str(len(vic))))
+    try:
+        cursor.execute('''SELECT * FROM victims WHERE rowid NOT IN (SELECT min(rowid) FROM victims GROUP BY name, password)''')
+        vic = cursor.fetchall()
+        if vic:
+            print("\n[{0}] Found [{1}] duplicate entries in databse.".format(g, str(len(vic))))
+            cursor.execute('''DELETE FROM victims WHERE rowid NOT IN (SELECT min(rowid) FROM victims GROUP BY name, password)''')
+            db.commit()
+            print("\n[{0}] Removed [{1}] duplicate entries from database".format(g, str(len(vic))))
+
+        else:
+            print("\n[{0}] No duplicate entires found in database!".format(b))
+
+    except sqlite3.OperationalError:
+        print("[{0}] Error: You must run --make_table to make the database and tables!".format(b))
 
 
-    else:
-        print("\n[{0}] No duplicate entires found in database!".format(b))
+
 
 def drop_all():
     (db, cursor) = db_connect()
-    cursor.execute('''DELETE FROM victims''')
-    db.commit()
-    print("\n[{0}] Deleted all entry's from database.".format(g))
+    try:
+        cursor.execute('''DELETE FROM victims''')
+        db.commit()
+        print("\n[{0}] Deleted all entry's from database.".format(g))
+
+    except sqlite3.OperationalError:
+        print("[{0}] Error: You must run --make_table to make the database and tables!".format(b))
+
 
 
 def query_sqlite3():
     (db, cursor) = db_connect()
+    try:
+        if args.email:
+            cursor.execute('''SELECT DISTINCT password FROM victims WHERE name=?''', (args.email,))
+            vic = cursor.fetchall()
+            if vic:
+                for row in vic:
+                    print("\n[{3}] Email   : {0}\n[*] Password: {1}\n".format(args.email, row[0], g))
+            else:
+                print("\n[{0}] No Entries found for ({1})\n".format(b ,args.email))
 
-    if args.email:
-        cursor.execute('''SELECT DISTINCT password FROM victims WHERE name=?''', (args.email,))
-        vic = cursor.fetchall()
-        if vic:
-            for row in vic:
-                print("\n[{3}] Email   : {0}\n[*] Password: {1}\n".format(args.email, row[0], g))
+        elif args.all:
+            cursor.execute('''SELECT * FROM victims''')
+            all_rows = cursor.fetchall()
+            for row in all_rows:
+                print("{0}:{1}".format(row[0], row[1]))
+            print("\n[{0}] Dumped {1} Email:Password Combinations.\n".format(g, str(len(all_rows))))
+
         else:
-            print("\n[{0}] No Entries found for ({1})\n".format(b ,args.email))
-
-    elif args.all:
-        cursor.execute('''SELECT * FROM victims''')
-        all_rows = cursor.fetchall()
-        for row in all_rows:
-            print("{0}:{1}".format(row[0], row[1]))
-        print("\n[{0}] Dumped {1} Email:Password Combinations.\n".format(g, str(len(all_rows))))
-
-    else:
-        parser.print_help()
+            parser.print_help()
+            
+    except sqlite3.OperationalError:
+        print("[{0}] Error: You must run --make_table to make the database and tables!".format(b))
 
 def dump_email(paste_key):
+    a=1
     (db, cursor) = db_connect()
     print("\n[{0}] Scraping pastebin for email:password dumps...\n".format(g))
     for key in paste_key:
@@ -187,6 +218,7 @@ def dump_email(paste_key):
             username, password = email.split(":")
             try:
                cursor.execute('''INSERT INTO victims(name, password) VALUES(?,?)''', (username, password))
+               a+=1
             except sqlite3.OperationalError:
                cursor.execute('''
                    CREATE TABLE victims(name TEXT, password TEXT)
@@ -198,6 +230,7 @@ def dump_email(paste_key):
                 username, password = email.split("|")
                 try:
                    cursor.execute('''INSERT INTO victims(name, password) VALUES(?,?)''', (username, password))
+                   a+=1
                 except sqlite3.OperationalError:
                    cursor.execute('''
                        CREATE TABLE victims(name TEXT, password TEXT)
@@ -205,7 +238,7 @@ def dump_email(paste_key):
             except:
                 pass
 
-    print("\n[{0}] Succesfully Inserted [{1}] Email:Password combinations into Database.".format(g, str(len(email_list))))
+    print("\n[{0}] Succesfully Inserted [{1}] Email:Password combinations into Database.".format(g, str(a)))
 
 
 def stream(paste_key, tyme=0.3):
@@ -223,8 +256,9 @@ def main():
     trends = api.trends()
     paste_key  = re.findall("\<paste\_key\>(.{1,50})\<", trends)
     try:
-
-        if args.backup:
+        if args.make_table:
+            make_database()
+        elif args.backup:
             backup_database()
 
         elif args.count:
@@ -264,4 +298,3 @@ def main():
 
 if __name__ == '__main__':
     main()
-
