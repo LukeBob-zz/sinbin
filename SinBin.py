@@ -204,7 +204,7 @@ def dump_email(paste_key):
         for line in data.split('\n'):
             if re.match("[\w.]+@[\w.]+", line):
                 email_list.append(line)
-    print("[{0}] Inserting [{1}] Username:Password combinations into Database...".format(g, str(len(email_list))))
+    print("[{0}] Inserting [{1}] Email:Password combinations into Database...".format(g, str(len(email_list))))
 
 
     for email in email_list:
